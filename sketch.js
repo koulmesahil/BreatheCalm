@@ -1,9 +1,10 @@
+// Variable to track the current animation state
+let bgColorP5;
 let gridSizeX, gridSizeY; // Separate grid sizes for rows and columns
 let letters = [];
 let angles = [];
 let targetAngles = [];
 let letterColorsP5 = [];
-let bgColorP5;
 let spacingX, spacingY;
 let button;
 let falling = false;
@@ -21,309 +22,528 @@ let timerDelayStartTime; // Time when the 6-second delay started
 let refreshButton;
 let customLetters = ["|","B", "R", "E", "A", "T", "H", "W", "O", "R", "K","|","|","B", "R", "E", "A", "T", "H", "W", "O", "R", "K","|","|","B", "R", "E", "A", "T", "H", "W", "O", "R", "K","|","|","B", "R", "E", "A", "T", "H", "W", "O", "R", "K","|","|","B", "R", "E", "A", "T", "H", "W", "O", "R", "K","|","|","B", "R", "E", "A", "T", "H", "W", "O", "R", "K","|"];
 // Select the "Change Colors" button
-let changeColorsButton = document.getElementById('changeColorsButton');
 
-// Event listener for changing colors
-changeColorsButton.addEventListener('click', function() {
-  // Call a function in sketch.js to change the background color
-  changeBackgroundColor();
-});
-// Function to change the background color
-function changeBackgroundColor() {
-  // Randomly change the background color
-  bgColorP5 = color(random(255), random(255), random(255)); // Change to a random color
-}
+// Define a background color or other properties for your home screen
+//slet bgColorP5 = color(255, 82, 113); // White background for initial state
+let startTime = 0; // Global start time
+
+
+// variables for breathing box animaiton 
+
+let squareSize = 200; // Initial square size
+let centerX, centerY; // Center of the canvas
+let phase = 0; // Tracks the animation phase
+let breathingTime = 4; // Time for expanding/shrinking in seconds
+
+
+
+let holdTime = 4; // Time for holding size in seconds
+
+
+
+
+
+
+let cycleTime = (breathingTime + holdTime) * 2; // Total cycle time
+
+
+
+
+let totalDuration = cycleTime * 1000; // Total duration in milliseconds
+
+
+
+
+
+let pointSpeed = (2 * (squareSize + 10)) / (breathingTime * 60); // Point speed
+let timeElapsed = 0;
+
+// variables for breathing box animaiton 
+
+// variables for the homescreenanimation
+
+let gridSize;  // This will be calculated based on screen size
+let letterColors = [];
+let spacing;
+
+let currentAnimation = 'homeScreenAnimation'; // Initial animation state
+
+//variables for the bubblel animation already exist above 
+
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  bgColorP5 = color(101, 67, 33); // Dark brownish color (earthy and calming)
+  background(bgColorP5);
+  centerX = width / 2;
+  centerY = height / 2;
+  gridSize = floor(width / 90);  // Choose a factor (e.g., 120) to control the size of the grid cells
+  spacing = width / gridSize;  // Calculate spacing for the grid based on the gridSize
+  bubbleCenterX = width / 2;
+  bubbleCenterY = height / 2;
 
-  // Full-page canvas
-  textFont('Trebuchet MS');
-  textSize(50);
-  textAlign(CENTER, CENTER);
-  noStroke();
-  // Calculate grid sizes based on window dimensions
-  gridSizeX = floor(windowWidth / 80); // Adjust column count based on window width
-  gridSizeY = floor(windowHeight / 80); // Adjust row count based on window height
-
-  // Initialize letters, angles, and colors
-  for (let i = 0; i < gridSizeX; i++) {
-    for (let j = 0; j < gridSizeY; j++) {
-      let letter = random(["S","K"]);
+  // Initialize letters and angles
+  for (let i = 0; i < gridSize; i++) {
+    for (let j = 0; j < gridSize; j++) {
+      let letter = random(["S", "K"]);  // Random letter "S" or "K"
       letters.push(letter);
-      angles.push(0);
-      targetAngles.push(0);
-      letterColorsP5.push(random([color(255), color(0)])); // White or black
-      yOffsets.push(0); // Initial y-offset for falling animation
-      fallSpeeds.push(random(2, 7)); // Random fall speed for each letter
-      xOffsets.push(random(-2, 2)); // Random horizontal movement
+      angles.push(0);  // Initial angle for each letter
+      targetAngles.push(0);  // Target angle (90 or 180 degrees)
+
+      // Use white and black colors for letters
+      let randomColor = random([
+        color(255, 255, 255),  // White (#FFFFFF)
+        color(0, 0, 0)         // Black (#000000)
+      ]);
+      letterColors.push(randomColor);
     }
-  }
+}
 
-  bgColorP5 = color(255, 84, 130); // Initial color
-  spacingX = width / gridSizeX;
-  spacingY = height / gridSizeY;
-
-  // Create the meditation button and center it
-  button = createButton("Start Meditation");
-  let buttonWidth = 200;
-  let buttonHeight = 100;
-
-  // Center button horizontally and vertically
-  button.position(width / 2 - buttonWidth / 2, height / 2 - buttonHeight / 2);
-  button.size(buttonWidth, buttonHeight);
-  button.style("font-family", "Georgia");
-  button.style("font-size", "50px");
-  button.style("background-color",bgColorP5);
-  button.style("color", "white");
-  button.style("border", "none");
-  button.style("border-radius", "5px");
-  button.mousePressed(() => {
-    falling = true;
-    timerDelayStartTime = millis(); // Start the 6-second delay
-    timerDelayStarted = true; // Flag that the delay has started
-    button.hide(); // Hide the meditation button
-  });
-
-  // Create the refresh button but hide it initially
-  refreshButton = createButton("⟳");
-  refreshButton.position(30, 30); // Position on the top left
-  refreshButton.size(30, 30);
-  refreshButton.style("font-size", "30px");
-  refreshButton.style("background-color", "rgba(255, 82, 113, 0)");
-  refreshButton.style("color", "white");
-  refreshButton.style("border", "none");
-  refreshButton.style("border-radius", "5px");
-  refreshButton.hide(); // Initially hide the refresh button
-  refreshButton.mousePressed(() => {
-    location.reload(); // Reload the page to reset everything
-  });
 }
 
 function draw() {
-  background(bgColorP5);
+    background(bgColorP5);
+  
+    // Draw the current animation based on the state
+    if (currentAnimation === 'homeScreenAnimation') {
+      homeScreenAnimation();
 
-  let allOffScreen = true; // Track if all letters have fallen off screen
-
-  // Timer functionality
-  if (timerDelayStarted) {
-    let delayElapsedTime = millis() - timerDelayStartTime;
+    } else if (currentAnimation === 'boxBreathing') {
+      boxBreathingAnimation(); // Box breathing animation
+    } else if (currentAnimation === 'secondBreathing') {
+      animateBreathingBubble(); // Second breathing animation
+    } else if (currentAnimation === 'thirdBreathing') {
+      animateBreathingBubbletwo();
+    } else if (currentAnimation === 'fourthBreathing') {
+    animateBreathingBubblethree();
+    } else if (currentAnimation === 'fifthBreathing') {
+    animateBreathingBubblefour();
+    }
     
-    if (delayElapsedTime >= 6000) { // After 6 seconds
-      if (!timerRunning) {
-        timerStartTime = millis(); // Start the timer
-        timerRunning = true;
-        refreshButton.show(); // Show the refresh button when the timer starts
-      }
-    }
+    
+    
   }
 
-  if (timerRunning) {
-    let elapsedTime = millis() - timerStartTime;
-    let minutes = floor(elapsedTime / 60000);
-    let seconds = floor((elapsedTime % 60000) / 1000);
-    let timerText = nf(minutes, 2) + ":" + nf(seconds, 2);
+function startAnimation(animationName) {
+    currentAnimation = animationName;
+  
+    // Reset start time for both animations
+    startTime = millis(); 
+  
 
-    // Draw the timer icon and the time
- // Timer icon centered horizontally at bottom
+}
 
-    drawClock(width / 2, height - 90 / 2 - 20, 30); // Draw clock at the bottom center
-    textSize(30);
-    textStyle(NORMAL);
-    text(timerText, width / 2, height - 30);
-  }
 
-  for (let i = 0; i < gridSizeX; i++) {
-    for (let j = 0; j < gridSizeY; j++) {
-      let x = (i + 0.5) * spacingX;
-      let y = (j + 0.5) * spacingY;
 
-      let index = i * gridSizeY + j;
-      let letter = letters[index];
-      let letterColor = letterColorsP5[index];
 
-      if (falling) {
-        yOffsets[index] += fallSpeeds[index]; // Increment y-offset by random fall speed
-        x += xOffsets[index]; // Add slight horizontal variation
-
-        // If any letter is still visible, set allOffScreen to false
-        if (y + yOffsets[index] < height + 50) { // Add a small buffer
-          allOffScreen = false;
-        }
-      } else if (angles[index] !== targetAngles[index]) {
-        let step = 0.1 * (targetAngles[index] - angles[index]);
-        angles[index] += step;
-      }
-
-      if (!falling && frameCount % 90 === 0) {
-        targetAngles[index] = random([90, 180]);
-      }
-
-      push();
-      translate(x, y + yOffsets[index]);
-      rotate(radians(angles[index]));
-      fill(letterColor);
-      text(letter, 0, 0);
-      pop();
-    }
-  }
-
-  // Stop the falling animation when all letters are off the screen
-  if (falling && allOffScreen) {
-    falling = false;
-
-    // Set up for the breathing animation
-    bubbleCenterX = width / 2;
-    bubbleCenterY = height / 2;
-    breathStartTime = millis();
-  }
-
-  if (!falling) {
-    // Animate the bubble (breathing effect)
-    let elapsedTime = millis() - breathStartTime;
-    let verticalMovement = 0;
-
-    if (breathingIn) {
-      bubbleRadius = map(elapsedTime, 0, 3000, 0, 300); // Breathe in for 3 seconds
-      verticalMovement = map(elapsedTime, 0, 3000, 0, -20); // Move up during "breathe in"
-      if (elapsedTime > 3000) {
-        breathingIn = false;
-        breathStartTime = millis(); // Restart timer for "breathe out"
-      }
+function boxBreathingAnimation() {
+    let elapsedTime = millis() - startTime; // Time elapsed since animation started
+    let currentTime = elapsedTime % totalDuration;
+  
+    // Determine the current phase of the breathing cycle
+    if (currentTime < breathingTime * 1000) {
+      phase = 0; // Expanding
+    } else if (currentTime < (breathingTime + holdTime) * 1000) {
+      phase = 1; // Holding at maximum size
+    } else if (currentTime < (2 * breathingTime + holdTime) * 1000) {
+      phase = 2; // Shrinking
     } else {
-      bubbleRadius = map(elapsedTime, 0, 5000, 300, 0); // Breathe out for 5 seconds
-      verticalMovement = map(elapsedTime, 0, 5000, -20, 0); // Move down during "breathe out"
-      if (elapsedTime > 5000) {
-        breathingIn = true;
-        breathStartTime = millis(); // Restart timer for "breathe in"
+      phase = 3; // Holding at minimum size
+    }
+  
+    let t;
+    if (phase === 0) {
+      t = map(currentTime, 0, breathingTime * 1000, 1, 1.5);
+    } else if (phase === 1) {
+      t = 1.5;
+    } else if (phase === 2) {
+      t = map(currentTime, (breathingTime + holdTime) * 1000, (2 * breathingTime + holdTime) * 1000, 1.5, 1);
+    } else {
+      t = 1;
+    }
+  
+    let currentSize = squareSize * t;
+  
+    // Drawing the square and point animation
+    stroke(255);
+    strokeWeight(3);
+    fill(255, 182, 193, 100);  // Light Pink (pastel)
+    rectMode(CENTER);
+    rect(centerX, centerY, currentSize, currentSize);
+  
+    // Display text based on the phase
+    textSize(30);
+    textAlign(CENTER, CENTER);
+    noStroke();
+    fill(255); // Black text
+    if (phase === 0) {
+      text("Breathe In", centerX, centerY);
+    } else if (phase === 1) {
+      text("Hold", centerX, centerY);
+    } else if (phase === 2) {
+      text("Breathe Out", centerX, centerY);
+    } else if (phase === 3) {
+      text("Hold", centerX, centerY);
+    }
+  
+    // Point movement logic
+    let travelTime = 4000;
+    let progress = (currentTime % travelTime) / travelTime;
+    let perimeter = currentSize * 4;
+    let distance = progress * perimeter;
+    let x, y;
+  
+    if (distance < currentSize) {
+      x = centerX - currentSize / 2 + distance;
+      y = centerY - currentSize / 2;
+    } else if (distance < currentSize * 2) {
+      x = centerX + currentSize / 2;
+      y = centerY - currentSize / 2 + (distance - currentSize);
+    } else if (distance < currentSize * 3) {
+      x = centerX + currentSize / 2 - (distance - currentSize * 2);
+      y = centerY + currentSize / 2;
+    } else {
+      x = centerX - currentSize / 2;
+      y = centerY + currentSize / 2 - (distance - currentSize * 3);
+    }
+  
+    noStroke();
+    fill(255);
+    ellipse(x, y, 15);
+  }
+  
+function homeScreenAnimation() {
+    background(bgColorP5);
+  
+    // Update and draw each letter
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        let x = (i + 0.5) * spacing;
+        let y = (j + 0.5) * spacing;
+  
+        let index = i * gridSize + j;
+        let letter = letters[index];
+        let letterColor = letterColors[index];
+  
+        // Smoothly rotate letters to their target angle
+        if (angles[index] !== targetAngles[index]) {
+          let step = 0.1 * (targetAngles[index] - angles[index]);
+          angles[index] += step;
+        }
+  
+        // Change target angle every 2 seconds
+        if (frameCount % 90 === 0) {
+          targetAngles[index] = random([90, 180]);
+        }
+  
+        // Draw the letter with smooth rotation and color
+        // Draw the letter with smooth rotation and color
+        push();
+        translate(x, y);  // Position the letter
+        rotate(radians(angles[index]));  // Apply the rotation based on its own center
+        fill(letterColor);
+
+// Center the text and set its size
+        textAlign(CENTER, CENTER);  // Align the text to be centered
+        textSize(30);  // Adjust the text size as needed
+
+// Draw the letter
+        text(letter, 0, 0);  // The text will be drawn centered at (0, 0)
+
+        pop();
+
       }
     }
+  }
+  
+  function mousePressed() {
+    // Check if the mouse is over any letter
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        let x = (i + 0.5) * spacing;
+        let y = (j + 0.5) * spacing;
+  
+        // Calculate distance between mouse and letter position
+        let distance = dist(mouseX, mouseY, x, y);
+  
+        // If clicked on the letter, make it rotate quickly
+        if (distance < spacing / 2) {
+          let index = i * gridSize + j;
+  
+          // Set a new target angle with a fast spin
+          targetAngles[index] = angles[index] + random([360, 720]); // Fast rotation
+        }
+      }
+    }
+  }
 
-    // Draw the bubble with a more organic look (gradient and smooth edges)
-    fill(255, 200, 200, 100); // Semi-transparent pink bubble
+
+
+
+
+
+
+
+
+function animateBreathingBubble() {
+    let elapsedTime = millis() - startTime;
+    let maxBubbleRadius = min(width, height) / 3;
+    let minBubbleRadius = maxBubbleRadius / 2;
+
+    // Reset bubble radius and movement at the start of each animation cycle
+    if (elapsedTime === 0) {
+        bubbleRadius = minBubbleRadius;
+        verticalMovement = 0;
+    }
+
+    // Breathing In
+    if (breathingIn) {
+        bubbleRadius = map(elapsedTime, 0, 3000, minBubbleRadius, maxBubbleRadius);
+        verticalMovement = map(elapsedTime, 0, 3000, 0, -20);
+        if (elapsedTime > 3000) {
+            breathingIn = false;
+            startTime = millis(); // Reset the start time
+        }
+    } 
+    // Breathing Out
+    else {
+        bubbleRadius = map(elapsedTime, 0, 5000, maxBubbleRadius, minBubbleRadius);
+        verticalMovement = map(elapsedTime, 0, 5000, -20, 0);
+        if (elapsedTime > 5000) {
+            breathingIn = true;
+            startTime = millis(); // Reset the start time
+        }
+    }
+
+    // Draw the bubble (with a soft pink color)
+    fill(255, 200, 200, 100);
     noStroke();
     ellipse(bubbleCenterX, bubbleCenterY + verticalMovement, bubbleRadius * 2);
 
-    // Display breathing instructions
-    fill(0);
+    // Display breathing instructions (text displayed in the center of the canvas)
+    fill(255);
     textSize(30);
+    textAlign(CENTER, CENTER);
+    text(breathingIn ? "Breathe in" : "Breathe out", bubbleCenterX, bubbleCenterY + verticalMovement);
+}
+
+function animateBreathingBubbletwo() {
+    let elapsedTime = millis() - startTime;
+    let maxBubbleRadius = min(width, height) / 3;
+    let minBubbleRadius = maxBubbleRadius / 2;
+
+    // Reset bubble radius and movement at the start of each animation cycle
+    if (elapsedTime === 0) {
+        bubbleRadius = minBubbleRadius;
+        verticalMovement = 0;
+    }
+
+    // Breathing In
     if (breathingIn) {
-      text("Breathe in", bubbleCenterX, bubbleCenterY + verticalMovement);
+        bubbleRadius = map(elapsedTime, 0, 4000, minBubbleRadius, maxBubbleRadius);
+        verticalMovement = map(elapsedTime, 0, 4000, 0, -20);
+        if (elapsedTime > 4000) {
+            breathingIn = false;
+            startTime = millis(); // Reset the start time
+        }
+    } 
+    // Breathing Out
+    else {
+        bubbleRadius = map(elapsedTime, 0, 7000, maxBubbleRadius, minBubbleRadius);
+        verticalMovement = map(elapsedTime, 0, 7000, -20, 0);
+        if (elapsedTime > 7000) {
+            breathingIn = true;
+            startTime = millis(); // Reset the start time
+        }
+    }
+
+    // Draw the bubble (with a soft pink color)
+    fill(255, 200, 200, 100);
+    noStroke();
+    ellipse(bubbleCenterX, bubbleCenterY + verticalMovement, bubbleRadius * 2);
+
+    // Display breathing instructions (text displayed in the center of the canvas)
+    fill(255);
+    textSize(30);
+    textAlign(CENTER, CENTER);
+    text(breathingIn ? "Breathe in" : "Breathe out", bubbleCenterX, bubbleCenterY + verticalMovement);
+}
+
+
+
+
+
+
+
+
+
+
+function animateBreathingBubblethree() {
+    let elapsedTime = millis() - startTime; // Time elapsed since animation started
+    let currentTime = elapsedTime % totalDuration;
+  
+    // Determine the current phase of the breathing cycle
+    if (currentTime < breathingTime * 1000) {
+      phase = 0; // Expanding
+    } else if (currentTime < (breathingTime + holdTime) * 1000) {
+      phase = 1; // Holding at maximum size
+    } else if (currentTime < (2 * breathingTime + holdTime) * 1000) {
+      phase = 2; // Shrinking
     } else {
-      text("Breathe out", bubbleCenterX, bubbleCenterY + verticalMovement);
+      phase = 3; // Holding at minimum size
     }
-
-    // Space out letters evenly in a circle
-    let letterSpacing = bubbleRadius / customLetters.length;
-    for (let i = 0; i < customLetters.length; i++) {
-      let angle = map(i, 0, customLetters.length, 0, TWO_PI);
-      let x = bubbleCenterX + cos(angle) * bubbleRadius;
-      let y = bubbleCenterY + verticalMovement + sin(angle) * bubbleRadius;
-      fill(letterColorsP5[i]);
-      text(customLetters[i], x, y);
+  
+    let t;
+    if (phase === 0) {
+      t = map(currentTime, 0, breathingTime * 1000, 1, 1.5);  // Expanding
+    } else if (phase === 1) {
+      t = 1.5;  // Holding at max size
+    } else if (phase === 2) {
+      t = map(currentTime, (breathingTime + holdTime) * 1000, (2 * breathingTime + holdTime) * 1000, 1.5, 1);  // Shrinking
+    } else {
+      t = 1;  // Holding at min size
     }
-  }
-}
-
-// Detect mouse click on each letter to make it spin
-function mousePressed() {
-  for (let i = 0; i < gridSizeX; i++) {
-    for (let j = 0; j < gridSizeY; j++) {
-      let x = (i + 0.5) * spacingX;
-      let y = (j + 0.5) * spacingY;
-      let index = i * gridSizeY + j;
-
-      // Check if mouse click is on the letter
-      if (dist(mouseX, mouseY, x, y) < 40) { // 40 is the radius of the clickable area
-        targetAngles[index] = random([360, 720, 1080]); // Spin the letter quickly (360, 720, 1080 degrees)
-      }
+  
+    let currentSize = bubbleRadius * t;  // Calculate the current size of the bubble
+  
+    // Drawing the bubble (circle)
+    stroke(255);
+    strokeWeight(3);
+    fill(255, 182, 193, 100);  // Light Pink (pastel)
+    ellipse(centerX, centerY, currentSize, currentSize);  // Draw the circle instead of the square
+  
+    // Display text based on the phase
+    textSize(30);
+    textAlign(CENTER, CENTER);
+    noStroke();
+    fill(255);  // White text
+    if (phase === 0) {
+      text("Breathe In", centerX, centerY);
+    } else if (phase === 1) {
+      text("Hold", centerX, centerY);
+    } else if (phase === 2) {
+      text("Breathe Out", centerX, centerY);
+    } else if (phase === 3) {
+      text("Hold", centerX, centerY);
     }
-  }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-
-  // Recalculate grid sizes
-  gridSizeX = floor(windowWidth / 100);
-  gridSizeY = floor(windowHeight / 100);
-
-  spacingX = width / gridSizeX;
-  spacingY = height / gridSizeY;
-
-  // Reset letters, angles, colors, yOffsets, fallSpeeds, and xOffsets
-  letters = [];
-  angles = [];
-  targetAngles = [];
-  letterColorsP5 = [];
-  yOffsets = [];
-  fallSpeeds = [];
-  xOffsets = [];
-
-  for (let i = 0; i < gridSizeX; i++) {
-    for (let j = 0; j < gridSizeY; j++) {
-      let letter = random(["S", "K"]);
-      letters.push(letter);
-      angles.push(0);
-      targetAngles.push(0);
-      letterColorsP5.push(random([color(255), color(0)])); // White or black
-      yOffsets.push(0); // Initial y-offset for falling animation
-      fallSpeeds.push(random(2, 7)); // Random fall speed for each letter
-      xOffsets.push(random(-2, 2)); // Random horizontal movement
-    }
-  }
-
-  // Reposition the button
-  button.position(width / 2 - 50, height / 2 - 25);
-
-  // Reposition the refresh button
-  refreshButton.position(10, 10);
+  
+    // Point movement logic (following the perimeter of the circle)
+    let travelTime = 6000;  // Total time for one loop around the circle
+    let progress = (currentTime % travelTime) / travelTime;  // Progress as a fraction
+    let perimeter = Math.PI * currentSize;  // Calculate the perimeter of the circle
+    let distance = progress * perimeter;  // Distance covered by the point
+    let angle = map(distance, 0, perimeter, 0, TWO_PI);  // Convert distance to angle around the circle
+  
+    // Calculate point's x and y position on the circle perimeter
+    let x = centerX + cos(angle) * (currentSize / 2);  // Calculate x position based on angle
+    let y = centerY + sin(angle) * (currentSize / 2);  // Calculate y position based on angle
+  
+    noStroke();
+    fill(255);  // White color for the point
+    ellipse(x, y, 15);  // Draw the point on the circle perimeter
 }
 
 
-function drawClock(x, y, size) {
-  // Draw the clock face (circle)
-  noFill(); // Transparent clock face
-  stroke(255); // White outline
-  strokeWeight(2);
-  ellipse(x, y, size, size);
+// Global flag to toggle visibility
+let isOutlineVisible = true;
 
-  // Draw clock markings (hour lines)
-  stroke(255); // White hour markings
-  strokeWeight(2); // Thin lines for the hour markings
-  for (let i = 0; i < 12; i++) {
-    const angle = radians(i * 30); // 360 degrees / 12 hours = 30 degrees per hour
-    const innerRadius = size / 2 * 0.8; // Inner radius for hour markings
-    const outerRadius = size / 2;      // Outer radius for hour markings
+let isInstructionsVisible = true;
 
-    const x1 = x + cos(angle) * innerRadius;
-    const y1 = y + sin(angle) * innerRadius;
-    const x2 = x + cos(angle) * outerRadius;
-    const y2 = y + sin(angle) * outerRadius;
+// Function to toggle the outline visibility
+function toggleOutline() {
+  isOutlineVisible = !isOutlineVisible; // Toggle the flag
+}
 
-    line(x1, y1, x2, y2);
+function toggleInstructions() {
+    isInstructionsVisible = !isInstructionsVisible; // Toggle the flag
   }
 
-  // Draw the clock hands
-  stroke(255); // White hands
-  strokeWeight(4);
-  const hourAngle = radians(42); // 4 o'clock (4 * 30 degrees)
-  const minuteAngle = radians(32); // 20 minutes past (20 * 6 degrees)
+// Breathing durations (in seconds)
+let breatheInTime = 4; // Breathe In duration
+//let holdTime = 2;      // Hold duration
+let breatheOutTime = 6; // Breathe Out duration
 
-  // Hour hand
-  line(
-    x,
-    y,
-    x + cos(hourAngle) * (size / 2 * 0.5),
-    y + sin(hourAngle) * (size / 2 * 0.5)
-  );
+// Calculate the total cycle duration
+//let totalDuration = (breatheInTime + holdTime + breatheOutTime + holdTime) * 1000;
 
-  // Minute hand
-  strokeWeight(2); // Thinner for minute hand
-  line(
-    x,
-    y,
-    x + cos(minuteAngle) * (size / 2 * 0.7),
-    y + sin(minuteAngle) * (size / 2 * 0.7)
-  );
+// Breathing bubble animation function
+function animateBreathingBubblefour() {
+  let elapsedTime = millis() - startTime; // Time elapsed since animation started
+  let currentTime = elapsedTime % totalDuration; // Current time within the cycle
+
+  // Determine the phase of the breathing cycle
+  let phase;
+  if (currentTime < breatheInTime * 1000) {
+    phase = 0; // Expanding (Breathe In)
+  } else if (currentTime < (breatheInTime + holdTime) * 1000) {
+    phase = 1; // Holding at max size
+  } else if (currentTime < (breatheInTime + holdTime + breatheOutTime) * 1000) {
+    phase = 2; // Shrinking (Breathe Out)
+  } else {
+    phase = 3; // Holding at min size
+  }
+
+  // Map the bubble size based on the phase
+  let t = 1; // Default size multiplier
+  if (phase === 0) {
+    t = map(currentTime, 0, breatheInTime * 1000, 1, 1.5); // Expanding
+  } else if (phase === 1) {
+    t = 1.5; // Holding at max size
+  } else if (phase === 2) {
+    t = map(
+      currentTime,
+      (breatheInTime + holdTime) * 1000,
+      (breatheInTime + holdTime + breatheOutTime) * 1000,
+      1.5,
+      1
+    ); // Shrinking
+  } else if (phase === 3) {
+    t = 1; // Holding at min size
+  }
+
+  let currentSize = bubbleRadius * t; // Calculate bubble size
+
+  // Draw the bubble only if the outline is visible
+  if (isOutlineVisible) {
+    stroke(255);
+    strokeWeight(3);
+    fill(255, 182, 193, 100); // Light Pink
+  } else {
+    noFill();
+    fill(255, 182, 193, 100); // Light Pink
+  }
+  ellipse(centerX, centerY, currentSize, currentSize); // Draw the bubble
+    
+  
+  if (isInstructionsVisible) {
+
+  // Display breathing phase text
+    textSize(30);
+    textAlign(CENTER, CENTER);
+    noStroke();
+    fill(255); // White text
+    if (phase === 0) {
+        text("Breathe In", centerX, centerY);
+    } else if (phase === 1) {
+        text("Hold", centerX, centerY);
+    } else if (phase === 2) {
+        text("Breathe Out", centerX, centerY);
+    } else if (phase === 3) {
+        text("Hold", centerX, centerY);
+    }
+
+  }
+  
+  
+
+  // Simple point movement around the bubble
+  if (isOutlineVisible) {
+    let angle = map(currentTime % totalDuration, 0, totalDuration, 0, TWO_PI); // Angle progression
+    let x = centerX + cos(angle) * (currentSize / 2); // x position
+    let y = centerY + sin(angle) * (currentSize / 2); // y position
+
+    fill(255); // White color for the point
+    ellipse(x, y, 15); // Draw the point
+  }
 }
