@@ -7,6 +7,9 @@
   <title>Breathe Calm</title>
 </head>
 <body>
+
+  <button id="startMeditationButton" class="button start-meditation">Start Meditation</button>
+
   <!-- Sliding menu -->
   <div id="menu" class="menu">
     <button class="menu-close" onclick="toggleMenu()">&#10005;</button>
@@ -14,10 +17,23 @@
       <button id="homeButton" class="menu-button">Home</button>
     </a>
     <button id="changeColorsButton" class="menu-button">Change Colors</button>
+    <button id="removeoutline" class="menu-button">Remove Outline</button>
+    <button id="removeinstructions" class="menu-button">Remove Instructions</button>
+
+
   </div>
 
   <!-- Sandwich menu toggle button -->
   <button id="menuToggle" class="menu-toggle" onclick="toggleMenu()">☰ </button>
+  <div class="button-container-top">
+    <button id="boxBreathingButton" class="button">Box Breathing</button>
+    <button id="second_breathing" class="button">Quick Breathing</button>
+    <button id="third_breathing" class="button">Calming Breathwork</button>
+    <button id="fourth_breathing" class="button">4-7-8 Breathwork</button>
+    <button id="fifth_breathing" class="button">Resonance Breathing</button>
+  </div>
+  
+
 
   <script src="sketch.js"></script>
   <script src="script.js"></script>
