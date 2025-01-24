@@ -5,32 +5,50 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
   <meta charset="utf-8" />
   <title>Breathe Calm</title>
+  <link rel="icon" href="assets/images/lungicon.png" type="image/png">
+
 </head>
 <body>
 
   <button id="startMeditationButton" class="button start-meditation">Start Meditation</button>
 
-  <!-- Sliding menu -->
   <div id="menu" class="menu">
+    <!-- Home and Instructions buttons at the top -->
+    <div class="top-buttons">
+      <button class="menu-button" id="homeButton">Home</button>
+    </div>
+  
+    <!-- Text Region -->
+    <div class="text-region" id="textRegion">
+      <p id="dynamicText">Hi, Welcome to my Breathing and Meditation website.Discover simple and effective breathing exercises designed to bring calm and clarity to your day. This platform offers a user-friendly experience with customizable settings to enhance your practice. Whether you're new to breathing techniques or looking to deepen your practice, you'll find a variety of exercises to suit your needs.</p>
+    </div>
+
+    <audio id="background-music" autoplay loop>
+      <source src="assets/audio/rainaudio.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+    <!-- Other buttons at the bottom -->
+    <div class="bottom-buttons">
+      <button id="changemusic" class="menu-button">Change Music</button>
+
+      <button id="removeoutline" class="menu-button">Outline/No Outline</button>
+      <button id="removeinstructions" class="menu-button">Instructions/No Instructions</button>
+      <button id="changeColorsButton" class="menu-button">Change Colors</button>
+
+    </div>
+  
     <button class="menu-close" onclick="toggleMenu()">&#10005;</button>
-    <a href="https://koulmesahil.github.io/">
-      <button id="homeButton" class="menu-button">Home</button>
-    </a>
-    <button id="changeColorsButton" class="menu-button">Change Colors</button>
-    <button id="removeoutline" class="menu-button">Remove Outline</button>
-    <button id="removeinstructions" class="menu-button">Remove Instructions</button>
-
-
   </div>
+  
 
   <!-- Sandwich menu toggle button -->
   <button id="menuToggle" class="menu-toggle" onclick="toggleMenu()">☰ </button>
   <div class="button-container-top">
     <button id="boxBreathingButton" class="button">Box Breathing</button>
-    <button id="second_breathing" class="button">Quick Breathing</button>
-    <button id="third_breathing" class="button">Calming Breathwork</button>
+    <button id="second_breathing" class="button">Slow Paced Breathing</button>
+    <button id="third_breathing" class="button">Resonance Breathing</button>
     <button id="fourth_breathing" class="button">4-7-8 Breathwork</button>
-    <button id="fifth_breathing" class="button">Resonance Breathing</button>
+    <button id="fifth_breathing" class="button">Pursed Lip Breathing</button>
   </div>
   
 

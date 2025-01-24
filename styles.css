@@ -1,151 +1,182 @@
 /* General body and canvas setup */
 body {
-    margin: 0;
-    font-family: Trebuchet MS, sans-serif;
-    background-color: #654321; /* Match the bgColorP5 from your p5.js sketch */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-  }
-  
-  canvas {
-    display: block;
-    margin: 0 auto;
-  }
-  
-  /* Style for the sandwich menu icon (top right) */
-  #menuToggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: rgba(101, 67, 33, 0.9);
-    color: white;
-    font-size: 30px;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  /* Sliding menu */
-  .menu {
-    position: fixed;
-    top: 0;
-    right: -250px; /* Hide menu initially */
-    width: 250px;
-    height: 100%;
-    background-color: rgba(101, 67, 33, 0.9);
-    transition: right 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .menu-button {
-    background: none;
-    color: white;
-    font-size: 24px;
-    border: none;
-    padding: 15px 30px;
-    cursor: pointer;
-    text-align: center;
-    width: 100%;
-  }
-  
-  .menu-button:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-  }
-  
-  .menu-close {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 30px;
-    background: none;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  /* Open menu styles */
-  .menu.open {
-    right: 0;
-  }
-  
-  
+  margin: 0;
+  font-family: Trebuchet MS, sans-serif;
+  background-color: #654321; /* Match the bgColorP5 from your p5.js sketch */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Style for the sandwich menu icon (top right) */
+#menuToggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(101, 67, 33, 0.9);
+  color: white;
+  font-size: 30px;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Sliding menu */
+/* Sliding menu */
+.menu {
+  position: fixed;
+  top: 0;
+  right: -300px; /* Hide menu initially */
+  width: 300px;
+  height: 100%;
+  background-color: rgba(101, 67, 33, 0.9);
+  transition: right 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Push the top buttons to the top, the text region in the middle, and the bottom buttons to the bottom */
+}
+
+.top-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px; /* Add some spacing at the top */
+}
+
+.text-region {
+  background-color: rgba(255, 255, 255, 0.1); /* Darker background for text area */
+  color: white;
+  padding: 10px;
+  margin-top: 10px;
+  flex-grow: 1; /* This ensures the text region takes up the available space */
+  text-align: center;
+}
+
+.bottom-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px; /* Add some spacing at the bottom */
+}
+
+.menu-button {
+  background: none;
+  color: white;
+  font-size: 24px;
+  border: none;
+  padding: 15px 30px;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 30px;
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* Open menu styles */
+.menu.open {
+  right: 0;
+}
+
+
 /* Initially hide the button container */
 .button-container-top {
-    position: absolute;
-    top: -100px; /* Start position above the screen */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 15px;
-    z-index: 10;
-    opacity: 0; /* Hide the buttons initially */
-    transition: all 1s ease-out; /* Smooth animation */
-  }
+  position: absolute;
+  top: -100px; /* Start position above the screen */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 10;
+  opacity: 0; /* Hide the buttons initially */
+  transition: all 1.5s ease-out; /* Smooth animation */
+
+}
+
+/* Show and animate buttons from the top when the 'show' class is added */
+.button-container-top.show {
+  top: 20px; /* End position */
+  opacity: 1; /* Make the buttons visible */
+}
+
+/* Optional: Transition for Start Meditation Button to make it fade out */
+#startMeditationButton.fade-out {
+  opacity: 0;
+  pointer-events: none; /* Prevent clicking while fading out */
+  transition: opacity 0.5s ease-out;
   
-  /* Show and animate buttons from the top when the 'show' class is added */
-  .button-container-top.show {
-    top: 20px; /* End position */
-    opacity: 1; /* Make the buttons visible */
-  }
-  
-  /* Optional: Transition for Start Meditation Button to make it fade out */
-  #startMeditationButton.fade-out {
-    opacity: 0;
-    pointer-events: none; /* Prevent clicking while fading out */
-    transition: opacity 0.5s ease-out;
-    
-  }
-  
-  .button {
-    font-family: 'Verdana', serif;
-    font-size: 20px;
-    background-color: rgba(101, 67, 33, 1);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .button:hover {
-    background-color: rgba(101, 67, 33, 1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+}
+
+.button {
+  font-family: 'Verdana', serif;
+  font-size: 20px;
+  background-color: rgba(101, 67, 33, 1);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  min-width: 150px; /* Optional: Ensure the button has a minimum width */
 
 
-  /* Specific styling for the "Start Meditation" button */
+}
+
+.button:hover {
+  background-color: rgba(101, 67, 33, 1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Specific styling for the "Start Meditation" button */
 .start-meditation {
-    font-family: 'Georgia', serif;
+  font-family: 'Georgia', serif;
 
-    font-size: 50px; /* Increase font size for the button */
-    padding: 20px 40px; /* Adjust padding to make the button bigger */
-    min-width: 200px; /* Optional: Ensure the button has a minimum width */
-    border-radius: 10px; /* Optional: Make the button's corners more rounded */
-    background-color: rgba(101, 67, 33, 1);
-    position: absolute;
+  font-size: 50px; /* Increase font size for the button */
+  padding: 20px 40px; /* Adjust padding to make the button bigger */
+  min-width: 200px; /* Optional: Ensure the button has a minimum width */
+  border-radius: 10px; /* Optional: Make the button's corners more rounded */
+  background-color: rgba(101, 67, 33, 1);
+  position: absolute;
 
+}
+
+.start-meditation:hover {
+  background-color: rgba(101, 67, 33, 0.9);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect on hover */
+}
+
+
+
+
+
+
+/* Optional responsive design */
+@media (max-width: 600px) {
+  #menuToggle {
+    font-size: 24px;
   }
-  
-  .start-meditation:hover {
-    background-color: rgba(101, 67, 33, 0.9);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect on hover */
+
+  .menu-button {
+    font-size: 20px;
   }
-  
-  
-  /* Optional responsive design */
-  @media (max-width: 600px) {
-    #menuToggle {
-      font-size: 24px;
-    }
-  
-    .menu-button {
-      font-size: 20px;
-    }
-  }
+}
