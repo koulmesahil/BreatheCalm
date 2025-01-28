@@ -41,6 +41,8 @@ canvas {
   transition: right 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
+
   justify-content: space-between; /* Push the top buttons to the top, the text region in the middle, and the bottom buttons to the bottom */
 }
 
@@ -106,7 +108,7 @@ canvas {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 5px;
+  gap: 2px;
   z-index: 10;
   opacity: 0; /* Hide the buttons initially */
   transition: all 1.5s ease-out; /* Smooth animation */
@@ -166,9 +168,66 @@ canvas {
 }
 
 
-
-
-
+      /* Toggle Switch Styles */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        margin: 10px 0;
+        margin-left: 210px; /* Move the toggle 2px to the right */
+      
+      }
+      
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+      
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      
+      input:checked + .slider {
+        background-color: #52f321;
+      }
+      
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+      
+      .label-text {
+        position: absolute;
+        left: -205px; /* Move text to the left of the toggle */
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 22px; /* Adjust font size if needed */
+        color: white;
+        white-space: nowrap; /* Prevent text from wrapping */
+      }
+      
+      
 
 /* Optional responsive design */
 @media (max-width: 600px) {

@@ -74,6 +74,14 @@ let icon;
 let lungicon;
 let noseiconexhale;
 
+
+
+
+
+
+
+
+
 function preload() {
     // Load the PNG icon
     icon = loadImage('assets/images/noseicon.png', function() {
@@ -106,7 +114,7 @@ function preload() {
       //icon.resize(80, 80);  // Resize the icon to 50x50
     });
 
-    svgIcon = loadImage('assets/images/mouthiconcheck.png', function() {
+    svgIcon = loadImage('assets/images/mouthexhale.png', function() {
         // Invert the colors after the image is loaded
         svgIcon.loadPixels();
         for (let i = 0; i < svgIcon.pixels.length; i += 4) {
@@ -246,6 +254,7 @@ function homeScreenAnimation() {
 }
 
 function mousePressed() {
+
   // Loop through all letters to check if the mouse is over any letter
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
@@ -290,6 +299,8 @@ function triggerRotationSpread(startRow, startCol) {
 function boxBreathingAnimation() {
   let elapsedTime = millis() - startTime; // Time elapsed since animation started
   let currentTime = elapsedTime % totalDuration;
+  let imgWidth = 80;
+  let imgHeight = 80;
 
   // Determine the current phase of the breathing cycle
   if (currentTime < breathingTime * 1000) {
@@ -334,13 +345,21 @@ function boxBreathingAnimation() {
       noStroke();
       fill(255); // White text
       if (phase === 0) {
-          text("Breathe In", centerX, centerY);
+          text("Breathe In", centerX, centerY+70);
+          image(icon, centerX - imgWidth / 2, centerY - imgHeight / 2, imgWidth, imgHeight)
+
       } else if (phase === 1) {
-          text("Hold", centerX, centerY);
+          text("Hold", centerX, centerY+70);
+          image(lungicon, centerX - imgWidth / 2, centerY - imgHeight / 2, imgWidth, imgHeight)
+
       } else if (phase === 2) {
-          text("Breathe Out", centerX, centerY);
+          text("Breathe Out", centerX, centerY+70);
+          image(svgIcon, centerX - imgWidth / 2, centerY - imgHeight / 2, imgWidth, imgHeight)
+
       } else if (phase === 3) {
-          text("Hold", centerX, centerY);
+          text("Hold", centerX, centerY+70);
+          image(lungicon, centerX - imgWidth / 2, centerY - imgHeight / 2, imgWidth, imgHeight)
+
       }
   }
 
@@ -386,6 +405,7 @@ function animateBreathingBubble() {
   let maxBubbleRadius = min(width, height) / 3;
   let minBubbleRadius = maxBubbleRadius / 2;
 
+
   // Reset bubble radius and movement at the start of each animation cycle
   if (elapsedTime === 0) {
       bubbleRadius = minBubbleRadius;
@@ -428,7 +448,9 @@ function animateBreathingBubble() {
 function animateBreathingBubbletwo() {
     let elapsedTime = millis() - startTime;
     let maxBubbleRadius = min(width, height) / 3;
-    let minBubbleRadius = maxBubbleRadius / 2;
+    let minBubbleRadius = maxBubbleRadius / 1.5;
+    let imgHeight=80;
+    let imgWidth=80;
 
     // Reset bubble radius and movement at the start of each animation cycle
     if (elapsedTime === 0) {
@@ -467,7 +489,7 @@ function animateBreathingBubbletwo() {
     fill(255);
     textSize(30);
     textAlign(CENTER, CENTER);
-    image(noseiconexhale,centerX - 40, centerY - 40 , 80,80)
+    image(icon, centerX - imgWidth / 2, centerY - imgHeight / 2, imgWidth, imgHeight)
     text(breathingIn ? "Breathe in" : "Breathe out", bubbleCenterX, bubbleCenterY + verticalMovement+80);
   }
 }
@@ -477,7 +499,6 @@ function animateBreathingBubbletwo() {
 
 
 
-breathingtime478=4
 
 
 function animateBreathingBubblethreeoldversion() {

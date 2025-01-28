@@ -14,6 +14,7 @@ function toggleMenu() {
     } else {
       menuToggle.style.display = 'block'; // Show the sandwich menu icon
     }
+
   }
   
 // Function to handle the Start Meditation button
@@ -84,8 +85,15 @@ let changemusic = document.getElementById('changemusic');
 
 
 let audioFiles = [
-        'assets/audio/rainaudio.mp3', // First audio file
+         'assets/audio/riverstreamaudio.mp3', // Second audio file
+
+        'assets/audio/healingfrequencies.mp3', // First audio file
+        'assets/audio/healingfrequencies2.mp3', // First audio file
         'assets/audio/riverstreamaudio.mp3', // Second audio file
+
+
+
+        'assets/audio/rainaudio.mp3', // First audio file
      
       ];
       
@@ -105,57 +113,122 @@ function togglemusic() {
 // Function to update text based on the button clicked
 function updateTextRegion(text) {
   const textRegion = document.getElementById("dynamicText");
-  textRegion.textContent = text;
+  textRegion.innerHTML = text; // Use innerHTML to render HTML tags
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 document.getElementById('boxBreathingButton').addEventListener('click', function() {
-        // Clear the canvas and start box breathing animation
-        startAnimation('boxBreathing');
-        updateTextRegion("Box Breathing: Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds, and hold for 4 seconds.");
+  // Clear the canvas and start box breathing animation
+  startAnimation('boxBreathing');
+  updateTextRegion(`
+    <div style="text-align: center;">
+      <u><b>Box Breathing</b></u>
+    </div><br>
+    Also called "square breathing," this technique is used by Navy SEALs to stay calm and focused.<br><br>
+    <div style="text-align: left;">
+        <u><b>How to Do It:</b><br></u>
+      - Inhale through your nose for 4 seconds.<br>
+      - Hold your breath for 4 seconds.<br>
+      - Exhale through your mouth for 4 seconds.<br>
+      - Hold again for 4 seconds.<br>
+      - Repeat for a few minutes.<br><br>
+      <u><b>Benefits:</b><br></u>
+      - Reduces stress and anxiety.<br>
+      - Boosts emotional control.<br>
+      - Regulates blood pressure.
+    </div>
+  `);
+  
+});
 
-      });
-      
 document.getElementById('second_breathing').addEventListener('click', function() {
         // Clear the canvas and start second breathing animation
         startAnimation('secondBreathing');
-        updateTextRegion("Slow Paced Breathing: Breathe in slowly for 5 seconds, exhale slowly for 5 seconds. Repeat.");
-
+        updateTextRegion(`
+          <div style="text-align: center;">
+            <u><b>Slow Paced Breathing</b></u>
+          </div><br>
+          A simple and effective breathing technique to promote relaxation and reduce stress.<br><br>
+          <div style="text-align: left;">
+            <u><b>How to Do It:</b><br></u>
+            - Breathe in slowly through your nose for 5 seconds.<br>
+            - Exhale slowly through your mouth for 5 seconds.<br>
+            - Repeat the cycle for a few minutes.<br><br>
+            <u><b>Benefits:</b><br></u>
+            - Promotes relaxation and reduces stress.<br>
+            - Helps improve focus and mindfulness.<br>
+            - Aids in better sleep and emotional well-being.
+          </div>
+        `);
+        
       });
       
 document.getElementById('third_breathing').addEventListener('click', function() {
         // Clear the canvas and start third breathing animation
         startAnimation('thirdBreathing');
-        updateTextRegion("Resonance Breathing: Breathe in for 4 seconds, breathe out for 6 seconds. Find a calming rhythm.");
-
+        updateTextRegion(`
+          <div style="text-align: center;">
+            <u><b>Resonance Breathing</b></u>
+          </div><br>
+          A calming breathing exercise designed to create a balanced rhythm between your breath and body.<br><br>
+          <div style="text-align: left;">
+            <u><b>How to Do It:</b><br></u>
+            - Breathe in slowly through your nose for 4 seconds.<br>
+            - Breathe out slowly through your nose  for 6 seconds.<br>
+            - Maintain a calming and consistent rhythm.<br>
+            - Repeat for a few minutes.<br><br>
+            <u><b>Benefits:</b><br></u>
+            - Enhances relaxation and reduces stress.<br>
+            - Improves heart rate variability and emotional balance.<br>
+            - Promotes mindfulness and a sense of calm.
+          </div>
+        `);
+        
       });
       
 document.getElementById('fourth_breathing').addEventListener('click', function() {
         // Clear the canvas and start fourth breathing animation
         startAnimation('fourthBreathing');
-        updateTextRegion("4-7-8 Breathwork: Inhale for 4 seconds, hold your breath for 7 seconds, and exhale slowly for 8 seconds.");
-
+        updateTextRegion(`
+          <div style="text-align: center;">
+            <u><b>4-7-8 Breathwork</b></u>
+          </div><br>
+          A powerful breathing technique to help calm the mind, reduce stress, and promote better sleep.<br><br>
+          <div style="text-align: left;">
+            <u><b>How to Do It:</b><br></u>
+            - Inhale slowly through your nose for 4 seconds.<br>
+            - Hold your breath for 7 seconds.<br>
+            - Exhale slowly through your mouth for 8 seconds.<br>
+            - Repeat the cycle for a few minutes.<br><br>
+            <u><b>Benefits:</b><br></u>
+            - Reduces stress and anxiety.<br>
+            - Helps with relaxation and falling asleep.<br>
+            - Improves focus and emotional control.<br>
+            - Enhances overall respiratory function.
+          </div>
+        `);
+        
       });
       
 document.getElementById('fifth_breathing').addEventListener('click', function() {
         // Clear the canvas and start fifth breathing animation
         startAnimation('fifthBreathing');
-        updateTextRegion("Pursed Lip Breathing: Inhale through your nose for 2 seconds, and exhale slowly through pursed lips for 4 seconds.");
-
+        updateTextRegion(`
+          <div style="text-align: center;">
+            <u><b>Pursed Lip Breathing</b></u>
+          </div><br>
+          A breathing technique that helps improve airflow and promotes relaxation by slowing the breath.<br><br>
+          <div style="text-align: left;">
+            <u><b>How to Do It:</b><br></u>
+            - Inhale slowly through your nose for 2 seconds.<br>
+            - Purse your lips (as if blowing out a candle) and exhale slowly for 4 seconds.<br>
+            - Repeat the cycle for a few minutes.<br><br>
+            <u><b>Benefits:</b><br></u>
+            - Helps improve breathing efficiency.<br>
+            - Reduces shortness of breath and promotes relaxation.<br>
+            - Aids in reducing stress and anxiety.
+          </div>
+        `);
+        
       });
        
   
